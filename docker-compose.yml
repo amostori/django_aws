@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    volumes:
+      - .:/django
+    ports:
+      - 8000:8000                                                                 
+    image: app:django
+    container_name: django_container
+    command: gunicorn simply.wsgi:application --bind 0.0.0.0:8000 --timeout=5 --threads=10 
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    image: nginx:latest
+    links:
+      - app
+    

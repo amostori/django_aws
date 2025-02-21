@@ -1,0 +1,30 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simply | Login</title>
+    <link rel="stylesheet" type="text/css" href="https://bootswatch.com/5/flatly/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
+    <br>
+    <div class="container bg-white shadow-md p-5" style="width:500px">
+        <h2>Login</h2>
+        <br>
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+            {{ form.username|as_crispy_field }}
+            <br><br>
+            {{ form.password|as_crispy_field }}
+            <br><br>
+            <button class="btn btn-primary" type="submit">Login</button>
+            <br><br>
+            <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+        </form>
+    </div>
+    <br>
+</body>
+</html>
