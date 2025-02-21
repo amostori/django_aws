@@ -58,24 +58,24 @@
 1. Stwórz konto root na AWS i konto IAM
 2. Dodaj users group i stwórz usera.
 3. S3 - do przechowywania plików statycznych (objects) w folderach (buckets).
-    a. Przejdź do S3 i wybierz 'Create bucket'
-    b. Podaj nazwę
-    c. Wybierz region
-    d. Usuń zaznaczenie w 'Block public access' i potwierdź ostrzeżenie.
-    e. Create
-    f. Po utworzeniu bucketa kliknij na niego i przejdź do 'Permissions'.
-    g. W Bucket policy kliknij 'edit':
-        * otwórz Policy generator w nowym oknie:
-            ~ Select Type of Policy: S3 Bucket Policy
-            ~ Principal: *
-            ~ Actions: GetObject
-            ~ ARN: adres arn twojego bucketa. Dodaj /* na końcu.
-            ~ Add statement
-            ~ Create i przekopiuj do S3.
+    - Przejdź do S3 i wybierz 'Create bucket'
+    - Podaj nazwę
+    - Wybierz region
+    - Usuń zaznaczenie w 'Block public access' i potwierdź ostrzeżenie.
+    - Create
+    - Po utworzeniu bucketa kliknij na niego i przejdź do 'Permissions'.
+    - W Bucket policy kliknij 'edit':
+        - otwórz Policy generator w nowym oknie:
+            - Select Type of Policy: S3 Bucket Policy
+            - Principal: *
+            - Actions: GetObject
+            - ARN: adres arn twojego bucketa. Dodaj /* na końcu.
+            - Add statement
+            - Create i przekopiuj do S3.
 4. Zainstaluj `pip install -U boto3` (SDK dla AWS), i `pip install -U django-storages`:
-    a. -U oznacza, że chcesz zainstalować najnowszą wersję.
-    b. W settings.py dodaj 'storages' do aplikacji zainstalowanych.
-    c. W settings.py dodaj konfigurację dla Amazon S3
+    - -U oznacza, że chcesz zainstalować najnowszą wersję.
+    - W settings.py dodaj 'storages' do aplikacji zainstalowanych.
+    - W settings.py dodaj konfigurację dla Amazon S3
 5. Zainstaluj AWS Cli i skonfiguruj w terminalu `aws configure`.
 6. W settings.py dodaj 'storages' do aplikacji zainstalowanych.
 7. `python manage.py collectstatic` - pliki statyczne zostaną przeniesione na S3 w AWS.
@@ -84,32 +84,32 @@
 1. Zainstaluj psycopg `pip install psycopg2-binary`.
     Przygotuj ustawienia DATABASE dla postrgesql w settings.py. Aby uzupełnić wszystkie potrzebne jest uruchomienie bazy danych na RDS.
 2. Uruchom RDS na AWS - ustaw region odpowiedni.
-    a. Enginie: PostgreSQL
-    b. Templates: Free Tier
-    c. DB instance id - popraw nazwę (wpisz ponownie np. 1) bo inaczej będzie marudzić
-    d. Master Username: np amostoriDB (dodaj do settings.py od razu)
-    e. Password: j.w
-    f. Public acces zaznacz
-    g. Additional configuration: wpisać 5432
-    h. Drugie Additional configuration: 
-        * initial database name - przepisz do settings.py
-    i. Create (10 - 15 min)
-    j. Po utworzeniu bazy kliknij jej nazwę i skopiuj Endpoint - dodaj do settings.py jako HOST
-    k. Otwórz w nowym oknie Security group:
+    - Enginie: PostgreSQL
+    - Templates: Free Tier
+    - DB instance id - popraw nazwę (wpisz ponownie np. 1) bo inaczej będzie marudzić
+    - Master Username: np amostoriDB (dodaj do settings.py od razu)
+    - Password: j.w
+    - Public acces zaznacz
+    - Additional configuration: wpisać 5432
+    - Drugie Additional configuration: 
+        - initial database name - przepisz do settings.py
+    - Create (10 - 15 min)
+    - Po utworzeniu bazy kliknij jej nazwę i skopiuj Endpoint - dodaj do settings.py jako HOST
+    - Otwórz w nowym oknie Security group:
         * kliknij nazwę serucity group
         * edit inbound rules
-            ~ add rule
-                ^ type: PostgresSQL
-                ^ 0.0.0.0/0
-            ~ add rule
-                ^ type: PostgresSQL
-                ^ ::/0
-            ~ save rules
+            - add rule
+                - type: PostgresSQL
+                - 0.0.0.0/0
+            - add rule
+                - type: PostgresSQL
+                - ::/0
+            - save rules
 3. Zakomentuj defaultową bazę danych w settings.py.
 4. runserver - pojawią się rzeczy do migracji
-    a. `python manage.py makemigrations`
-    b. `python manage.py migrate`
-    c. `python manage.py createsuperuser` (crmsn, Pln)
+    - `python manage.py makemigrations`
+    - `python manage.py migrate`
+    - `python manage.py createsuperuser` (crmsn, Pln)
 
 ## Route 53 - domena ##
 
@@ -141,72 +141,72 @@
 6. Na AWS wejdź na repo dla aplikacji django i kliknij View push commands.
 Wykonaj w terminalu (głównym, nie venv) pierwszą komendę (logowanie), drugiej nie rób (budowanie image), w trzeciej zmień tag na taki jak widnieje w DockerDesktop (np nginx:latest), a czwartą komendę wykonaj bez zmian.
 7. Load balancer i DNS records
-    a. Przejdź na EC2 i do sekcji Load Balancer kliknij Create Load Balancer.
-    b. Wybierz Application Load Balancer, nadaj mu nazwę, skonfiguruj Mappings, stwórz Security Groups (usuń domyślną)
-        * nadaj nazwę i uzupełnij pole description (nazwa)
-        * add rule:
-            ~ type: http
-            ~ source: 0.0.0.0/0
-        * add rule:
-            ~ type: http
-            ~ source: ::/0
-        * add rule:
-            ~ type: https
-            ~ source: 0.0.0.0/0
-        * add rule:
-            ~ type: https
-            ~ source: ::/0
-    Dodaj Listeners and Routing (otwórz w nowym oknie 'create target group'):
-        * nadaj nazwę
-        * kliknij next i create
-    Dodaj drugiego Listenera, tym razem dla https (port 443) i wybierz mu ten sam target group
-    W Default SSL wybierz certyfikat dla twojej strony
-    c. Przejdź do Route 53 i kliknij hosted zone
-    d. Kliknij domenę
-    e. W sekcji records kliknij create record
-        * kliknij 'alias' i wybierz Alias to Application and Classic Load Balancer
-        * ustaw region taki jak dla Load Balancera
-        * ustaw load balancera  
-        * kliknij 'add another record' i ustaw wszystko tak samo dla subdomeny z 'www'
-    f. Przejdź do EC2 i Load Balancer i zaznacz twojego load balancera.
-    g. W sekcji Listeners and rules zaznacz listener dla http i wybierz z listy edit listener.
-        * W sekcji Action Types wybierz 'Redirect to Url' i wpisz port 443 dla HTTPS
+    - Przejdź na EC2 i do sekcji Load Balancer kliknij Create Load Balancer.
+    - Wybierz Application Load Balancer, nadaj mu nazwę, skonfiguruj Mappings, stwórz Security Groups (usuń domyślną)
+        - nadaj nazwę i uzupełnij pole description (nazwa)
+        - add rule:
+            - type: http
+            - source: 0.0.0.0/0
+        - add rule:
+            - type: http
+            - source: ::/0
+        - add rule:
+            - type: https
+            - source: 0.0.0.0/0
+        - add rule:
+            - type: https
+            - source: ::/0
+    - Dodaj Listeners and Routing (otwórz w nowym oknie 'create target group'):
+        - nadaj nazwę
+        - kliknij next i create
+    - Dodaj drugiego Listenera, tym razem dla https (port 443) i wybierz mu ten sam target group
+    - W Default SSL wybierz certyfikat dla twojej strony
+    - Przejdź do Route 53 i kliknij hosted zone
+    - Kliknij domenę
+    - W sekcji records kliknij create record
+        - kliknij 'alias' i wybierz Alias to Application and Classic Load Balancer
+        - ustaw region taki jak dla Load Balancera
+        - ustaw load balancera  
+        - kliknij 'add another record' i ustaw wszystko tak samo dla subdomeny z 'www'
+    - Przejdź do EC2 i Load Balancer i zaznacz twojego load balancera.
+    - W sekcji Listeners and rules zaznacz listener dla http i wybierz z listy edit listener.
+        - W sekcji Action Types wybierz 'Redirect to Url' i wpisz port 443 dla HTTPS
 8. Security Group dla ECS
-    a. Przejdź do EC2, Security Groups i kliknij 'create security group'
-        * nadaj nazwę i description (np ESC-SG)
-        * kliknij 'add rule'
-            ~ type: All TCP
-            ~ source: twoj Load Balance
-        * klinij create
+    - Przejdź do EC2, Security Groups i kliknij 'create security group'
+        - nadaj nazwę i description (np ESC-SG)
+        - kliknij 'add rule'
+            - type: All TCP
+            - source: twoj Load Balance
+        - klinij create
     
 9. Zdefiniuj task
-    a. Przejdź do ESC i task definition. Kliknij 'creat task definition with JSON'
-    b. Z pliku uzupełnij task definition zastępując elementy z url image nginx i aplikacji django pobierając URI z ECR (kontenery na Amazon)
-    c. Kliknij 'create'
-    d. Przejdź do Task definition i kilknij create revision i dodaj Environments Variables dla kontenera z aplikacją (drugi). Kliknij create.
+    - Przejdź do ESC i task definition. Kliknij 'creat task definition with JSON'
+    - Z pliku uzupełnij task definition zastępując elementy z url image nginx i aplikacji django pobierając URI z ECR (kontenery na Amazon)
+    - Kliknij 'create'
+    - Przejdź do Task definition i kilknij create revision i dodaj Environments Variables dla kontenera z aplikacją (drugi). Kliknij create.
 10. Stwórz ECS cluster i service.
-    a. Przejdź do ECS i kliknij create cluster
-        * nadaj nazwę
-        * W Infrastructe wybierz Amazon EC2
-            ~ operating system: Amazon Linux 2023
-            ~ EC2 instance type: t3.micro
-        * W Subnets odznacz wszystko i zaznacz w kolejności alfabetycznej
-        * W Security Groups odznacz defaultową i wybierz stworzoną w punkcie 8 (ESC-SG)
-        * W auto-assign public IP wybierz turn on
-        * create
-        * za pierwszym razem pojawi się błąd (bug) - należy powtórzyć tworzenie clustera
-    b. Kliknij twój cluster - przeniesiesz się do serviców. Wybierz create
-        * W task definition wybierz Family i 'application-stack' z ostatnią revizją.
-        * nadaj nazwę
-        * wybierz LoadBalancer
-            ~ type: Application Load Balancer
-            ~ load balancer:  wybierz swój, stworzony wcześniej
-            ~ target group: Use existing i wybierz swój target group
-            ~ listener: Use existing i powinno wskoczyć 443
-            ~ create
-    c. Stiky session
-        * EC2 => Target Groups. Zaznacz twój Target i w actions wybierz 'Edit target attributes'
-        * Przejdź do Stickness i ustaw.
+    - Przejdź do ECS i kliknij create cluster
+        - nadaj nazwę
+        - W Infrastructe wybierz Amazon EC2
+            - operating system: Amazon Linux 2023
+            - EC2 instance type: t3.micro
+        - W Subnets odznacz wszystko i zaznacz w kolejności alfabetycznej
+        - W Security Groups odznacz defaultową i wybierz stworzoną w punkcie 8 (ESC-SG)
+        - W auto-assign public IP wybierz turn on
+        - create
+        - za pierwszym razem pojawi się błąd (bug) - należy powtórzyć tworzenie clustera
+    - Kliknij twój cluster - przeniesiesz się do serviców. Wybierz create
+        - W task definition wybierz Family i 'application-stack' z ostatnią revizją.
+        - nadaj nazwę
+        - wybierz LoadBalancer
+            - type: Application Load Balancer
+            - load balancer:  wybierz swój, stworzony wcześniej
+            - target group: Use existing i wybierz swój target group
+            - listener: Use existing i powinno wskoczyć 443
+            - create
+    - Stiky session
+        - EC2 => Target Groups. Zaznacz twój Target i w actions wybierz 'Edit target attributes'
+        - Przejdź do Stickness i ustaw.
 
 ## Clean up ##
 
